@@ -1,0 +1,54 @@
+﻿@model IEnumerable<UsersPlatform.Models.ProjectUser>
+@inject Microsoft.AspNetCore.Identity.SignInManager<UsersPlatform.Areas.Identity.Data.ApplicationUser> signInManager;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-primary mb-3" style="width:auto" asp-action="Create">Assign a project</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Project)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+           @*@if(ViewBag.Id)
+                {
+
+                }*@
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })  <span>|</span>
+                
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) <span>|</span>
+                    
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                }
+
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
