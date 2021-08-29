@@ -17,15 +17,23 @@ namespace UsersPlatform.Controllers
     public class ProjectUsersController : Controller
     {
         private readonly UsersPlatformContext _context;
-
-        public ProjectUsersController(UsersPlatformContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string projectName { get; set; }
+        public ProjectUsersController(UsersPlatformContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ProjectUsers
         public async Task<IActionResult> Index()
         {
+            var user = await _userManager.GetUserAsync(User);
+            var userID =  _userManager.GetUserId(User);
+
+            UserId = userID;
 
             var usersPlatformContext = _context.ProjectUser.Include(p => p.Project).Include(p => p.User);
             var usersProjectList = await usersPlatformContext.ToListAsync();
@@ -34,6 +42,7 @@ namespace UsersPlatform.Controllers
         }
 
         // GET: ProjectUsers/Details/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -54,10 +63,18 @@ namespace UsersPlatform.Controllers
         }
 
         // GET: ProjectUsers/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["ProjectId"] = new SelectList(_context.Project, "ID", "ID");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+
+            var user =  _userManager.GetUserAsync(User);
+            var userN =  _userManager.GetUserName(User);
+
+            UserName = userN;
+
+
             //ViewData["UserName"] = new SelectList(_context.Project, "ProjectName", "ProjectName");
             //ViewData["ProjectName"] = new SelectList(_context.Users, "ProjectName", "ProjectName");
             return View(); 
@@ -78,6 +95,12 @@ namespace UsersPlatform.Controllers
             }
             ViewData["ProjectId"] = new SelectList(_context.Project, "ID", "ID", projectUser.ProjectId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectUser.UserId);
+
+            var user = await _userManager.GetUserAsync(User);
+            var userN = await _userManager.GetUserNameAsync(user);
+
+            UserName = userN;
+
             return View(projectUser);
         }
 

@@ -26,11 +26,9 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-           @*@if(ViewBag.Id)
-                {
 
-                }*@
+
+<tr>
             <td>
                 @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
