@@ -103,7 +103,7 @@ namespace UsersPlatform.Areas.Identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                #region Email Confirmtation and Log in after registeration
+                    #region Email Confirmtation and Log in after registeration
                     //var callbackUrl = Url.Page(
                     //    "/Account/ConfirmEmail",
                     //    pageHandler: null,
@@ -123,7 +123,9 @@ namespace UsersPlatform.Areas.Identity.Pages.Account
                     //    return LocalRedirect(returnUrl);
                     //}
 
-#endregion
+                    #endregion
+
+                    return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {

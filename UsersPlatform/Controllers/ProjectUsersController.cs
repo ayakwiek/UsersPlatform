@@ -35,6 +35,8 @@ namespace UsersPlatform.Controllers
 
             UserId = userID;
 
+            ViewData["UserId"] = UserId;
+
             var usersPlatformContext = _context.ProjectUser.Include(p => p.Project).Include(p => p.User);
             var usersProjectList = await usersPlatformContext.ToListAsync();
             List<AssignedProjects> assignedProjects = new List<AssignedProjects>();
@@ -96,10 +98,14 @@ namespace UsersPlatform.Controllers
             ViewData["ProjectId"] = new SelectList(_context.Project, "ID", "ID", projectUser.ProjectId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", projectUser.UserId);
 
+
             var user = await _userManager.GetUserAsync(User);
+            var userID = _userManager.GetUserId(User);
             var userN = await _userManager.GetUserNameAsync(user);
 
-            UserName = userN;
+            UserId = userID;
+
+            ViewData["UserName"] = userN;
 
             return View(projectUser);
         }

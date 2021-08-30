@@ -6,17 +6,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Assigned Projects</h1>
 
 <p>
-    <a class="btn btn-primary mb-3" style="width:auto" asp-action="Create">Assign a project</a>
+    @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+    {
+        <a class="btn btn-primary mb-3" style="width:auto" asp-action="Create">Assign a project</a>
+    }
+
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+            }
+
             <th>
                 @Html.DisplayNameFor(model => model.Project)
             </th>
@@ -26,27 +34,56 @@
     <tbody>
         @foreach (var item in Model)
         {
+            var z = ViewData["UserId"].ToString();
+            if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project.ProjectName)
+                    </td>
+                    <td>
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) <span>|</span>
 
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) <span>|</span>
 
-<tr>
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        }
+
+                    </td>
+                </tr>
+            }
+            else if (item.UserId == ViewData["UserId"].ToString())
+            {
+    <tr>
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+        {
             <td>
                 @Html.DisplayFor(modelItem => item.User.FirstName) @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
-            <td>
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
-                {
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })  <span>|</span>
-                
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) <span>|</span>
-                    
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                }
+        }
 
-            </td>
-        </tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+        </td>
+        <td>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+            {
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) <span>|</span>
+
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) <span>|</span>
+
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            }
+
+        </td>
+    </tr>
+            }
+
         }
     </tbody>
 </table>
